@@ -1,0 +1,45 @@
+#!/bin/sh
+
+##First we will run a network check
+##to make sure you have network connectivity
+
+echo testing network connectivity
+
+ping -c 4 8.8.8.8 > /dev/null
+
+
+function networt_test if $? == 0
+then
+	echo you need network connectivity
+	exit
+fi
+
+
+
+###here we will check to make sure you have tcp replay
+echo checking that you have tcpreplay
+
+tcpreplay > /dev/null
+
+function tcpreplay_check if $?== 0
+then
+	echo you need 'tcpreplay'
+	exit
+fi
+
+
+
+
+
+echo reading pcaps
+
+readarray filecontent < /home/irish/Documents/git/nenya/pcaps/
+
+echo attempting to replay over network
+
+
+for i in filecontent
+do
+	sudo tcpreplay> /dev/null -i wlp3s0b1 filecontent
+done
+
