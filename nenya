@@ -6,9 +6,15 @@
 
 #main function
 
-function main { 
+function main {
 	network_test
 	dependency_check
+	pcaps_locate
+	#pcaps_replay
+}
+
+function Ftest {
+	pcaps_replay
 }
 
 #function to check users network connectivity
@@ -17,7 +23,7 @@ function network_test {
 
 	echo 'Testing your network connectivity. PLEASE WAIT!!!'
 	ping -c 4 www.google.com &> /dev/null
-	if [ $? == 0 ]; then 
+	if [ $? == 0 ]; then
 		echo 'Your connection is good!'
 	else
 		echo 'Please setup network connectivity before using Nenya!'
@@ -26,32 +32,54 @@ function network_test {
 }
 
 #checks to verify dependencies
-#tcpreplay > /dev/null
 
-function dependency_check { 
+function dependency_check {
 	echo
 	echo 'Verifying that you have the correct dependencies!'
 	which tcpreplay &> /dev/null
 	if [ $? == 1 ]; then
 		echo 'You need to install the "tcpdump" package before continuing!'
 		exit 1
-	else 
+	else
 		echo 'Dependencies verified.'
 	fi
-} 
+}
+
+#locates .pcap files on users system and consolidates them to one directory
+
+function pcaps_locate {
+	echo 'Locating packet capture files.'
+	locate *.pcap | xargs cp -t pcaps/ &> /dev/null #change directory after finish
+}
+
+#replays packet captures through interface
+
+function pcaps_replay {
+	echo -n "Enter your network interface: "
+	read iface
+	tcpreplay -l 2 -M=50 -i $iface pcaps/*
+}
 
 
-#echo reading pcaps
+#this is just for the development of this tool so that we can test functions
+#before adding them to the main function
+function dev_prompt {
+  while true; do
+    echo -n 'Do you want to run the main function or the test function? [M/t]: '
+    read input
+    default='m'
+    input="${input:-${default}}"
+    input="${input,,}"
+    if [ "$input" == 'm' ] || [ "$input" == 'main' ]; then
+      main
+      break
+    elif [ "$input" == 't' ] || [ "$input" == 'test' ]; then
+      Ftest
+      break
+    else
+      echo 'Fuck off!'
+    fi
+  done
+}
 
-#readarray filecontent < /home/irish/Documents/git/nenya/pcaps/
-
-#echo attempting to replay over network
-
-
-#for i in filecontent
-#do
-#	sudo tcpreplay> /dev/null -i wlp3s0b1 filecontent
-#done
-
-
-main
+dev_prompt
