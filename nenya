@@ -10,11 +10,14 @@ function main {
 	network_test
 	dependency_check
 	pcaps_locate
-	#pcaps_replay
+	pcaps_replay
 }
 
+#development function
+
 function Ftest {
-	pcaps_replay
+	#insert testing function(s)
+
 }
 
 #function to check users network connectivity
@@ -36,9 +39,9 @@ function network_test {
 function dependency_check {
 	echo
 	echo 'Verifying that you have the correct dependencies!'
-	which tcpreplay &> /dev/null
+	which tcpreplay &> /dev/null && which locate &> /dev/null
 	if [ $? == 1 ]; then
-		echo 'You need to install the "tcpdump" package before continuing!'
+		echo 'You need to ensure you have "tcpreplay" and "mlocate" installed to continue!'
 		exit 1
 	else
 		echo 'Dependencies verified.'
@@ -57,29 +60,30 @@ function pcaps_locate {
 function pcaps_replay {
 	echo -n "Enter your network interface: "
 	read iface
-	tcpreplay -l 2 -M=50 -i $iface pcaps/*
+	tcpreplay -l 2 -M=50 -i $iface pcaps/* #directory may change as noted in pcaps_locate function
 }
 
 
 #this is just for the development of this tool so that we can test functions
 #before adding them to the main function
-function dev_prompt {
-  while true; do
-    echo -n 'Do you want to run the main function or the test function? [M/t]: '
-    read input
-    default='m'
-    input="${input:-${default}}"
-    input="${input,,}"
-    if [ "$input" == 'm' ] || [ "$input" == 'main' ]; then
-      main
-      break
-    elif [ "$input" == 't' ] || [ "$input" == 'test' ]; then
-      Ftest
-      break
-    else
-      echo 'Fuck off!'
-    fi
-  done
-}
+#function dev_prompt {
+#  while true; do
+#    echo -n 'Do you want to run the main function or the test function? [M/t]: '
+#    read input
+#    default='m'
+#    input="${input:-${default}}"
+#    input="${input,,}"
+#    if [ "$input" == 'm' ] || [ "$input" == 'main' ]; then
+#      main
+#      break
+#    elif [ "$input" == 't' ] || [ "$input" == 'test' ]; then
+#      Ftest
+#      break
+#    else
+#      echo 'Fuck off!'
+#    fi
+#  done
+#}
 
-dev_prompt
+#dev_prompt
+main
