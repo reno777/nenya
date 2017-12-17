@@ -1,45 +1,57 @@
 #!/bin/sh
+#Title: Nenya
+#Description: A tool to obfuscate your network traffic with random pcaps
+#Made by: Reno777 and Catphish1994
+#License: MIT
 
-##First we will run a network check
-##to make sure you have network connectivity
+#main function
 
-echo testing network connectivity
+function main { 
+	network_test
+	dependency_check
+}
 
-ping -c 4 8.8.8.8 > /dev/null
+#function to check users network connectivity
+
+function network_test {
+
+	echo 'Testing your network connectivity. PLEASE WAIT!!!'
+	ping -c 4 www.google.com &> /dev/null
+	if [ $? == 0 ]; then 
+		echo 'Your connection is good!'
+	else
+		echo 'Please setup network connectivity before using Nenya!'
+		exit 1
+	fi
+}
+
+#checks to verify dependencies
+#tcpreplay > /dev/null
+
+function dependency_check { 
+	echo
+	echo 'Verifying that you have the correct dependencies!'
+	which tcpreplay &> /dev/null
+	if [ $? == 1 ]; then
+		echo 'You need to install the "tcpdump" package before continuing!'
+		exit 1
+	else 
+		echo 'Dependencies verified.'
+	fi
+} 
 
 
-function networt_test if $? == 0
-then
-	echo you need network connectivity
-	exit
-fi
+#echo reading pcaps
+
+#readarray filecontent < /home/irish/Documents/git/nenya/pcaps/
+
+#echo attempting to replay over network
 
 
-
-###here we will check to make sure you have tcp replay
-echo checking that you have tcpreplay
-
-tcpreplay > /dev/null
-
-function tcpreplay_check if $?== 0
-then
-	echo you need 'tcpreplay'
-	exit
-fi
+#for i in filecontent
+#do
+#	sudo tcpreplay> /dev/null -i wlp3s0b1 filecontent
+#done
 
 
-
-
-
-echo reading pcaps
-
-readarray filecontent < /home/irish/Documents/git/nenya/pcaps/
-
-echo attempting to replay over network
-
-
-for i in filecontent
-do
-	sudo tcpreplay> /dev/null -i wlp3s0b1 filecontent
-done
-
+main
