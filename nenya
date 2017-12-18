@@ -38,9 +38,9 @@ function network_test {
 function dependency_check {
 	echo
 	echo 'Verifying that you have the correct dependencies!'
-	which tcpreplay &> /dev/null && which locate &> /dev/null
+	which tcpreplay &> /dev/null && which locate &> /dev/null && which route &> /dev/null
 	if [ $? == 1 ]; then
-		echo 'You need to ensure you have "tcpreplay" and "mlocate" installed to continue!'
+		echo 'You need to ensure you have "tcpreplay", "mlocate" and "route" installed to continue!'
 		exit 1
 	else
 		echo 'Dependencies verified.'
@@ -85,7 +85,7 @@ function pcaps_replay {
 #  done
 #}
 
-#dev_prompt
+#dev_prompt 
 main
 
 
