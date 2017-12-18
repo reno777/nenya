@@ -15,10 +15,9 @@ function main {
 
 #development function
 
-function Ftest {
+#function Ftest {
 	#insert testing function(s)
-
-}
+#}
 
 #function to check users network connectivity
 
@@ -58,9 +57,11 @@ function pcaps_locate {
 #replays packet captures through interface
 
 function pcaps_replay {
-	echo -n "Enter your network interface: "
-	read iface
-	tcpreplay -l 2 -M=50 -i $iface pcaps/* #directory may change as noted in pcaps_locate function
+	#echo -n "Enter your network interface: "
+	#read iface
+	iface=`route | grep 'default' | grep -o '[^ ]*$'`
+	#echo $iface##This is a debug statement
+	tcpreplay -l 2 -M=50 -i $iface  pcaps/* #directory may change as noted in pcaps_locate function
 }
 
 
@@ -87,3 +88,5 @@ function pcaps_replay {
 
 #dev_prompt
 main
+
+
